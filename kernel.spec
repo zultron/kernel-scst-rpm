@@ -15,7 +15,7 @@ Summary: The Linux kernel
 # that the kernel isn't the stock distribution kernel, for example,
 # by setting the define to ".local" or ".bz123456"
 #
-# % define buildid .local
+%define buildid .scst
 
 %define distro_build 431.20.3
 %define signmodules 1
@@ -104,6 +104,7 @@ Summary: The Linux kernel
 %endif
 
 # Control whether we perform a compat. check against published ABI.
+%define _without_kabichk 1
 %define with_kabichk   %{?_without_kabichk:   0} %{?!_without_kabichk:   1}
 # Control whether we perform a compat. check against published ABI.
 %define with_fips      %{?_without_fips:      0} %{?!_without_fips:      1}
@@ -551,6 +552,15 @@ Source3: ftp://ftp.kernel.org/pub/linux/kernel/v2.6/testing/incr/patch-2.6.%{ups
 %endif
 %endif
 
+# exec_req_fifo patch from scst
+# https://sourceforge.net/p/scst/svn/HEAD/tree/trunk/scst/kernel/rhel/scst_exec_req_fifo-2.6.32.patch?format=raw
+Source5: scst_exec_req_fifo-2.6.%{base_sublevel}.patch
+
+# put_page_callback patch from iscsi-scst
+# https://sourceforge.net/p/scst/svn/HEAD/tree/trunk/iscsi-scst/kernel/patches/rhel/put_page_callback-2.6.32-431.patch?format=raw
+Source7: put_page_callback-2.6.%{base_sublevel}-%(echo %{distro_build} | \
+	 					       cut -d . -f 1).patch
+
 Source11: genkey
 Source13: perf-archive
 Source14: find-provides
@@ -933,6 +943,8 @@ cp %{SOURCE15} %{SOURCE1} %{SOURCE16} %{SOURCE17} %{SOURCE18} .
 make -f %{SOURCE20} VERSION=%{version} configs
 
 ApplyOptionalPatch linux-kernel-test.patch
+ApplyPatch %(basename %{SOURCE5})
+ApplyPatch %(basename %{SOURCE7})
 
 # Any further pre-build tree manipulations happen here.
 
@@ -1732,6 +1744,11 @@ fi
 %endif
 
 %changelog
+* Tue Jul 29 2014 John Morris <john@zultron.com> - 2.6.32-431.20.3.el6
+- Add scst and iscsi-scst patches
+- Add config for CONFIG_TCP_ZERO_COPY_TRANSFER_COMPLETION_NOTIFICATION
+- Disable ABI checks
+
 * Fri Jun 06 2014 Petr Holasek <pholasek@redhat.com> [2.6.32-431.20.3.el6]
 - [kernel] futex: Make lookup_pi_state more robust (Jerome Marchand) [1104516 1104517] {CVE-2014-3153}
 - [kernel] futex: Always cleanup owner tid in unlock_pi (Jerome Marchand) [1104516 1104517] {CVE-2014-3153}

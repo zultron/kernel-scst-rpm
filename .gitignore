@@ -3,3 +3,5 @@
 
 # build artifacts
 /kernel-*.src.rpm
+/.build-*.log
+/kernel-*/

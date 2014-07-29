@@ -1,3 +1,14 @@
+# From iscsi-scst README:
+#
+# To use full power of TCP zero-copy transmit functions, especially
+# dealing with user space supplied via scst_user module memory,
+# iSCSI-SCST needs to be notified when Linux networking finished data
+# transmission.  For that you should enable
+# CONFIG_TCP_ZERO_COPY_TRANSFER_COMPLETION_NOTIFICATION kernel config
+# option. This is highly recommended, but not required.
+#
+CONFIG_TCP_ZERO_COPY_TRANSFER_COMPLETION_NOTIFICATION=y
+#
 CONFIG_CGROUP_PERF=y
 CONFIG_FW_LOADER=y
 CONFIG_CGROUPS=y

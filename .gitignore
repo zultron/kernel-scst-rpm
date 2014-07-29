@@ -1,0 +1,5 @@
+# sources
+/linux-*.tar.bz2
+
+# build artifacts
+/kernel-*.src.rpm

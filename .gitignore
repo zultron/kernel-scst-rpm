@@ -5,3 +5,4 @@
 /kernel-*.src.rpm
 /.build-*.log
 /kernel-*/
+/x86_64/
